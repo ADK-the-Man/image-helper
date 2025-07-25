@@ -123,18 +123,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>Image Prompt Generator</h1>
+        <h1>IMP - Image Prompt Generator</h1>
         <p style="text-align: center;">First, tell us what you want to see in the image, then choose a style. <b><a href="https://translate.google.co.in/?sl=te&tl=en&op=translate" target="_new">Translate from Telugu to English First</a></b></p>
-
-        
 
         <div class="input-section">
             <label for="userInput">Describe your main image content:</label>
             <textarea id="userInput" placeholder="e.g., a cat cutely talking to a man on the road walking on two legs."></textarea>
             <p style="font-size: 0.9em; color: #666; margin-top: 5px;">This will be appended to your chosen style template.</p>
         </div>
-
-        ---
 
         <h2>Choose an Image Style:</h2>
         <div class="image-gallery">
@@ -156,15 +152,21 @@
             </div>
             <div class="image-card" data-style="3d-render">
                 <img src="3drender.png" alt="3D Render Example">
-                <h3>3D Render</h3>
+                <h3>Gold Statue</h3>
             </div>
             <div class="image-card" data-style="sketch">
-                <img src="pencilsketch.png" alt="Sketch Example">
+                <img src="pencilsketch.png" alt="Sketch Pencil">
                 <h3>Sketch / Drawing</h3>
             </div>
+            <div class="image-card" data-style="3d-silver">
+                <img src="silverimage.png" alt="Silver Statue">
+                <h3>Silver Statue</h3>
+            </div>
+            <div class="image-card" data-style="watercolor">
+                <img src="watercolor.png" alt="Watercolor Example">
+                <h3>Watercolor Painting</h3>
+            </div>
         </div>
-
-        ---
 
         <div class="prompt-display" id="promptDisplay">
             <h2>Your Generated Prompt</h2>
@@ -189,24 +191,38 @@
         const basePromptTemplates = {
             'photorealistic': 'Generate a highly detailed **photorealistic** image in 1920x1080, ',
             'digital-art': 'Generate a highly detailed **digital art** illustration in 1920x1080, ',
-            'Oil painting': 'Generate a highly detailed **painting** in 1920x1080, in the style of oil, depicting ',
+            'painting': 'Generate a highly detailed **painting** in 1920x1080, in the style of oil, depicting ',
             'comic': 'Generate a highly detailed **comic book style** image in 1920x1080, with bold outlines and dynamic poses, featuring ',
-            '3d-render': 'Generate A highly detailed, hyper-realistic 3D golden statue with realistic textures and detailed lighting, of ',
-            'sketch': 'Generate a highly detailed **sketch/drawing** in 1920x1080, hand-drawn with pencil, of '
+            '3d-render': 'Generate A highly detailed, hyper-realistic 3D golden statue in 1920x1080, with realistic textures and detailed lighting, of ',
+            'sketch': 'Generate a highly detailed **sketch/drawing** in 1920x1080, hand-drawn with pencil, of ',
+            'watercolor': 'Generate a highly detailed **painting** in 1920x1080, in the style of watercolor, depicting ',
+            '3d-silver': 'Generate A highly detailed, hyper-realistic 3D silver statue in 1920x1080, with realistic textures and detailed lighting, of '
         };
 
         let selectedStyle = null; // To keep track of the currently selected style
 
         function generateFullPrompt() {
             const userText = userInput.value.trim();
-            if (selectedStyle && userText) {
+            if (selectedStyle && basePromptTemplates[selectedStyle] !== undefined) { // Added robust check
                 let template = basePromptTemplates[selectedStyle];
                 // Append user input directly
                 generatedPrompt.textContent = template + userText + '.'; // Add a period for completeness
                 promptDisplay.style.display = 'block';
+
+                // --- NEW CODE ADDED HERE ---
+                // Scroll the promptDisplay into view smoothly
+                promptDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // --- END NEW CODE ---
+
             } else if (!userText && selectedStyle) {
                 generatedPrompt.textContent = "Please enter your image description above!";
                 promptDisplay.style.display = 'block';
+
+                // --- NEW CODE ADDED HERE ---
+                // Scroll the promptDisplay into view smoothly even if no text
+                promptDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // --- END NEW CODE ---
+
             } else {
                 promptDisplay.style.display = 'none'; // Hide if no style or no text
             }
